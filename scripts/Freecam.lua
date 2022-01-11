@@ -153,27 +153,29 @@ local Input = {} do
 	local FOV_GAMEPAD_SPEED  = 0.25
 	local NAV_ADJ_SPEED      = 0.75
 	local NAV_SHIFT_MUL      = 0.25
+	local NAV_CTRL_MUL       = 4
 
 	local navSpeed = 1
 
 	function Input.Vel(dt)
-		navSpeed = clamp(navSpeed + dt*(keyboard.Up - keyboard.Down)*NAV_ADJ_SPEED, 0.01, 4)
+		navSpeed = clamp(navSpeed + dt * (keyboard.Up - keyboard.Down)*NAV_ADJ_SPEED, 0.01, 4)
 
 		local kGamepad = Vector3.new(
 			thumbstickCurve(gamepad.Thumbstick1.X),
 			thumbstickCurve(gamepad.ButtonR2) - thumbstickCurve(gamepad.ButtonL2),
 			thumbstickCurve(-gamepad.Thumbstick1.Y)
-		)*NAV_GAMEPAD_SPEED
+		) * NAV_GAMEPAD_SPEED
 
 		local kKeyboard = Vector3.new(
 			keyboard.D - keyboard.A + keyboard.K - keyboard.H,
 			keyboard.E - keyboard.Q + keyboard.I - keyboard.Y,
 			keyboard.S - keyboard.W + keyboard.J - keyboard.U
-		)*NAV_KEYBOARD_SPEED
+		) * NAV_KEYBOARD_SPEED
 
-		local shift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) or UserInputService:IsKeyDown(Enum.KeyCode.RightShift)
+		local shift = UserInputService:IsKeyDown(Enum.KeyCode.LeftShift)
+		local ctrl = UserInputService:IsKeyDown(Enum.KeyCode.LeftControl)
 
-		return (kGamepad + kKeyboard)*(navSpeed*(shift and NAV_SHIFT_MUL or 1))
+		return (kGamepad + kKeyboard) * (navSpeed * (shift and NAV_SHIFT_MUL or 1) * (ctrl and NAV_CTRL_MUL or 1))
 	end
 
 	function Input.Pan(dt)
@@ -403,6 +405,10 @@ local PlayerState = {} do
 		UserInputService.MouseBehavior = mouseBehavior
 		mouseBehavior = nil
 	end
+end
+
+if LocalPlayer.PlayerGui:FindFirstChild("Freecam") then
+	LocalPlayer.PlayerGui.Freecam:Destroy()
 end
 
 local Freecam = {Enabled = false, Keybinds = FREECAM_MACRO_KB}
