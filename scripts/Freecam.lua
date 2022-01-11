@@ -407,9 +407,11 @@ local PlayerState = {} do
 	end
 end
 
-if LocalPlayer.PlayerGui:FindFirstChild("Freecam") then
-	LocalPlayer.PlayerGui.Freecam:Destroy()
-end
+pcall(function()
+	if LocalPlayer.PlayerGui:FindFirstChild("Freecam") then
+		LocalPlayer.PlayerGui.Freecam:Destroy()
+	end
+end)
 
 local Freecam = {Enabled = false, Keybinds = FREECAM_MACRO_KB}
 
