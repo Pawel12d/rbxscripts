@@ -1,3 +1,5 @@
+local LoadString, request, getcustomasset, getobjects, HttpService = ...
+
 if not isfolder("temp-assets") then
 	makefolder("temp-assets")
 end
