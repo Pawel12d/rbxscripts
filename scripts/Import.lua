@@ -2,8 +2,9 @@ if not isfolder("temp-assets") then
 	makefolder("temp-assets")
 end
 
-game.OnClose = function()
+local onClose; onClose = hookfunc(game.OnClose, function(...)
 	delfolder("temp-assets")
+	return onClose(...)
 end
 
 local Import = {} -- getobjects, httpget, httppost, fromRBXM, fromASSET
