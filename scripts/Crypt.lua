@@ -12,8 +12,6 @@ function Crypt.JSONDecode(self, data)
 	return HttpService:JSONDecode(data)
 end
 
-return Crypt
-
 --[[
 function encode(data, depth)
     local depth = 1
@@ -26,7 +24,7 @@ function encode(data, depth)
             if typeof(i) == "number" then
                 
             elseif typeof(i) == "string" then
-                result = result .. [["]] .. i .. [[":]] .. encode(v, depth + 1)
+                result = result .. " .. i .. ": .. encode(v, depth + 1)
             end
         end
     end
@@ -40,3 +38,5 @@ print("orig", game.HttpService:JSONEncode(test))
 
 print("mine", encode(test))
 --]]
+
+return Crypt
