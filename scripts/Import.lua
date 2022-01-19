@@ -3,9 +3,7 @@ if not isfolder("temp-assets") then
 end
 
 game.OnClose = function()
-	if isfolder("temp-assets") then
-		delfolder("temp-assets")
-	end
+	delfolder("temp-assets")
 end
 
 local Import = {} -- getobjects, httpget, httppost, fromRBXM, fromASSET
