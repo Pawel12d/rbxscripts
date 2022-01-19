@@ -9,14 +9,14 @@ end
 
 local Import = {} -- getobjects, httpget, httppost, fromRBXM, fromASSET
 
-function Import.getobjects(self, url)
-	url = url or self
-	return getobjects(game, url)
+function Import.getobjects(self, data)
+	data = data or self
+	return getobjects(game, data)
 end
 
-function Import.httpget(self, url)
-	url = url or self
-	return request({Url = url}).Body
+function Import.httpget(self, data)
+	data = data or self
+	return request({Url = data}).Body
 end
 
 function Import.httppost(self, url, body)
@@ -30,6 +30,7 @@ function Import.fromRBXM(self, rbxm)
 end
 
 function Import.fromASSET(self, data)
+	data = data or self
 	local name = "temp-assets/asset-" .. math.random(1, 999999999) .. ".temp"
 	writefile(name, data)
 	return getcustomasaset(name)
