@@ -11,8 +11,8 @@ function Import.httpget(self, url)
 end
 
 function Import.httppost(self, url, body)
-	url = url:sub(1,4) == "http" and url or self
-	body = url:sub(1,4) == "http" and body or url
+	body = body or url
+	url = typeof(url) == "string" and url or self
 	return request({Url = url, Method = "POST", Headers = {['Content-Type'] = 'application/json'}, Body = body})
 end
 
