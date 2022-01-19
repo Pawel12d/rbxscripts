@@ -1,4 +1,14 @@
-local Import = {}
+if not isfolder("temp-assets") then
+	makefolder("temp-assets")
+end
+
+game.OnClose = function()
+	if isfolder("temp-assets") then
+		delfolder("temp-assets")
+	end
+end
+
+local Import = {} -- getobjects, httpget, httppost, fromRBXM, fromASSET
 
 function Import.getobjects(self, url)
 	url = url or self
@@ -20,8 +30,10 @@ function Import.fromRBXM(self, rbxm)
 	
 end
 
-function Import.fromASSET(self, asset)
-	
+function Import.fromASSET(self, data)
+	local name = "temp-assets/asset-" .. math.random(1, 999999999) .. ".temp"
+	writefile(name, data)
+	return getcustomasaset(name)
 end
 
 return Import

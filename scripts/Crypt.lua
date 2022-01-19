@@ -1,7 +1,5 @@
 local Crypt = {}
 
-local HttpService = game:GetService("HttpService")
-
 function Crypt.JSONEncode(self, data)
 	data = data or self
 	return HttpService:JSONEncode(data)
