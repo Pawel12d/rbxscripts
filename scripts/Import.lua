@@ -1,5 +1,10 @@
 local Import = {}
 
+function Import.getobjects(self, url)
+	url = url or self
+	return getobjects(url)
+end
+
 function Import.httpget(self, url)
 	url = url or self
 	return request({Url = url}).Body
