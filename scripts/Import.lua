@@ -1,4 +1,4 @@
-local LoadString, request, getcustomasset, getobjects, HttpService = ...
+local LoadString, request, getcustomasset, getobjects, HttpService = unpack({...})
 
 if not isfolder("temp-assets") then
 	makefolder("temp-assets")
