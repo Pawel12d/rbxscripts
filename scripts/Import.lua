@@ -7,7 +7,7 @@ end
 local onClose; onClose = hookfunc(game.OnClose, function(...)
 	delfolder("temp-assets")
 	return onClose(...)
-end
+end)
 
 local Import = {}
 
