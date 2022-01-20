@@ -9,7 +9,7 @@ local onClose; onClose = hookfunc(game.OnClose, function(...)
 	return onClose(...)
 end
 
-local Import = {} -- getobjects, httpget, httppost, fromRBXM, fromASSET
+local Import = {} -- F: getobjects, httpget, httppost, fromRBXM, fromASSET
 
 function Import.getobjects(self, data)
 	data = data or self
