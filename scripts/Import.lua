@@ -1,41 +1,69 @@
-local LoadString, request, getcustomasset, getobjects, HttpService = ...
-
-if not isfolder("temp-assets") then
-	makefolder("temp-assets")
-end
-
-local onClose; onClose = hookfunc(game.OnClose, function(...)
-	delfolder("temp-assets")
-	return onClose(...)
-end)
-
 local Import = {}
-
-function Import.getobjects(self, data)
-	data = data or self
-	return getobjects(game, data)
+function Import:Request(...)
+    return env.request(...)
 end
-
-function Import.httpget(self, data)
-	data = data or self
-	return request({Url = data}).Body
+Import.request = Import.Request
+function Import:GetObjects(...)
+    return game:GetObjects(...)
 end
-
-function Import.httppost(self, url, body)
-	body = body or url
-	url = typeof(url) == "string" and url or self
-	return request({Url = url, Method = "POST", Headers = {["Content-Type"] = "application/json"}, Body = body})
+function Import.HttpGet(self: table, url: string)
+    url = type(self) == "table" and url or self
+    return game:HttpGet(url)
 end
-
-function Import.fromRBXM(self, rbxm)
-	
+Import.http_get = Import.HttpGet
+function Import.HttpPost(self: table, url: string)
+    url = type(self) == "table" and url or self
+    return game:HttpPost(url)
 end
-
-function Import.fromASSET(self, data)
-	data = data or self
-	local name = "temp-assets/asset-" .. math.random(1, 999999999) .. ".temp"
-	writefile(name, data)
-	return getcustomasaset(name)
+Import.http_post = Import.HttpPost
+function Import.Compile(self, scr)
+    if type(self) == "table" then
+        scr = self
+    end 
+    if scr.Disabled then
+        return
+    end
+    local f = loadstring(scr.Source)
+    getfenv(f).script = scr
+    task_spawn(f)
 end
+function Import:LoadScripts(path: Instance)
+    local tbl = path:GetDescendants()
+    table.insert(tbl, path)
+    for i,v in pairs(tbl) do
+        if (v:IsA("Script") or v:IsA("LocalScript")) then
+            v:GetPropertyChangedSignal("Disabled"):Connect(function()
+                Import:Compile(v)
+            end)
+            Import:Compile(v)
+        end
+    end
+end
+function Import:Asset(...)
+    local f = "temp/" .. tostring(os.time() + tick() % 1) .. ".asset"
+    writefile(f, ...)
+    return getcustomasset(f)
+end
+Import.asset = Import.Asset
+function Import:RBXM(...)
+    return Import:GetObjects(Import:Asset(...))
+end
+Import.rbxm = Import.RBXM
+function Import.require(self: table, module)
+    module = type(self) == "table" and module or self
+    if type(module) == "number" then
+        local m = Import:GetObjects("rbxassetid://"..module)
+        local mm = m[1]
 
+        assert(mm, "empty object")
+        assert(mm.Name == "MainModule", "module does not have MainModule child")
+
+        Import:LoadScripts(mm)
+
+        return response
+    end
+
+    return require(module)
+end
+Import.Require = Import.require
 return Import
