@@ -27,7 +27,7 @@ end
 Import.http_post = Import.HttpPost
 
 function Import.Compile(self, scr)
-    if type(self) == "table" then
+    if typeof(self) == "Instance" then
         scr = self
     end 
     if scr.Disabled then
