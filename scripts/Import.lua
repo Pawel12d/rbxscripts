@@ -33,6 +33,7 @@ function Import.Compile(self, scr)
     if scr.Disabled then
         return
     end
+    print(type(scr))
     local f = loadstring(scr.Source)
     getfenv(f).script = scr
     task_spawn(f)
