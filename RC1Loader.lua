@@ -454,6 +454,7 @@ local function start()
 		print(("FreeCam2 %s [%s]"):format(FreeCam2.Name, FreeCam2.self))
 
 		local RestoreBytecode = InjectBytecode(FreeCam2)
+		print("Enter spectator mode for RC1 to load")
         createNativeThread(function()
             repeat sleep(200) until PlayerGui:FindFirstChild("RC1")
             print("RC1 Loaded!")
@@ -472,6 +473,9 @@ local function start()
         end)
 		return
 	end
+
+	print("You need to join either a supported game or have a tool with a localscript in your inventory!")
+	return
 end
 
 inject()
