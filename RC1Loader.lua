@@ -371,25 +371,6 @@ local function start()
 	local PlayerGui = LocalPlayer:FindFirstClass("PlayerGui")
 	local PlayerScripts = LocalPlayer:FindFirstClass("PlayerScripts")
 
-	local function AutoExec()
-		if true then return end --HttpGet
-		createNativeThread(function()
-			PlayerGui.RC1.Parent = CoreGui
-			local NetworkClient = game:GetService("NetworkClient")
-			local GetURL = LocalPlayer.PlayerGui.RC1.Components.Loadstring.Environment.GetURL
-			GetURL.Parent = NetworkClient
-			while true do
-				local success, response = pcall(function()
-					print(GetURL.Value)
-				end)
-				if not success then
-					print("[ERR]:", success, response)
-				end
-				sleep(2500)
-			end
-		end)
-	end
-
 	local function InjectBytecode(targetScript)
 		local injectScript
 		local results = util.aobScan("496E6A656374????????????????????06")
@@ -436,10 +417,32 @@ local function start()
 		print("Bytecode injected successfully!")
 
 		return function()
-			AutoExec()
 			writeBytes(targetScript.self + 0x100, oldBytes)
 			print("Bytecode restored successfully!")
 		end
+	end
+
+	local function AutoExec()
+		repeat sleep(200) until PlayerGui:FindFirstChild("RC1")
+		local RC1 = PlayerGui.RC1
+		RC1.OriginalLoader.Value = true
+		RC1.Parent = CoreGui
+		print("RC1 Loaded!")
+		RestoreBytecode()
+		--[[
+		local NetworkClient = game:GetService("NetworkClient")
+		local GetURL = LocalPlayer.PlayerGui.RC1.Components.Loadstring.Environment.GetURL
+		GetURL.Parent = NetworkClient
+		while true do
+			local success, response = pcall(function()
+				print(GetURL.Value)
+			end)
+			if not success then
+				print("[ERR]:", success, response)
+			end
+			sleep(2500)
+		end
+		--]]
 	end
 
 	--local char = game:GetService("Workspace")[LocalPlayer.Name]
@@ -455,22 +458,14 @@ local function start()
 
 		local RestoreBytecode = InjectBytecode(FreeCam2)
 		print("Enter spectator mode for RC1 to load")
-        createNativeThread(function()
-            repeat sleep(200) until PlayerGui:FindFirstChild("RC1")
-            print("RC1 Loaded!")
-            RestoreBytecode()
-        end)
+        createNativeThread(AutoExec)
 		return
 	end
 
 	-- Tool
 	if Backpack:FindFirstClass("Tool") then
 		local RestoreBytecode = InjectBytecode(Backpack:FindFirstClass("Tool"):FindFirstClass("LocalScript"))
-        createNativeThread(function()
-            repeat sleep(200) until PlayerGui:FindFirstChild("RC1")
-            print("RC1 Loaded!")
-            RestoreBytecode()
-        end)
+        createNativeThread(AutoExec)
 		return
 	end
 
