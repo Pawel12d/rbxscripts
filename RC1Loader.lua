@@ -376,7 +376,6 @@ local function start()
 		RC1.OriginalLoader.Value = true
 		RC1.Parent = CoreGui
 		print("RC1 Loaded!")
-		RestoreBytecode()
 		--[[
 		local NetworkClient = game:GetService("NetworkClient")
 		local GetURL = LocalPlayer.PlayerGui.RC1.Components.Loadstring.Environment.GetURL
